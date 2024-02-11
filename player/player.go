@@ -3,6 +3,7 @@ package Player
 import (
 	"gong/Coordinates"
 	Ball "gong/ball"
+	"math"
 )
 
 type Player struct {
@@ -54,21 +55,45 @@ func (p *Player) UprateUpdate() {
 	}
 }
 
-func (p *Player) AutoMove(b Ball.Ball) {
+func (p *Player) AutoMove(b Ball.Ball, height, width int) {
 	// the distance between the ball and paddle
 	deltaX := float64(b.GetXValue() - p.GetPosition().GetX())
 	// the height between the ball and paddle
 
 	deltaY := float64(b.GetYValue() - p.GetPosition().GetY())
-	if deltaY > 30 {
-		p.Position.SetY(p.Position.GetY() + p.MovementRate)
+
+	//This calculates in how many frames will the ball reach the paddles x axis
+	framesToX := math.Abs(deltaX / float64(b.GetVector().GetX()))
+	//This calculates the maximum height if it doesnt bounce before reaching the X axis
+	possibleApex := framesToX * float64(b.GetVector().GetY())
+
+	// Predicition system
+	if possibleApex < float64(height)*-1 {
+		deltaY = float64(b.GetVector().ReverseY()) * framesToX
+		//	fmt.Println("--------------\nProbable top bounce ")
 	}
-	if deltaY < 30 {
-		p.Position.SetY(p.Position.GetY() - p.MovementRate)
+	if possibleApex > float64(height) {
+		deltaY = float64(b.GetVector().ReverseY()) * framesToX
+		//	fmt.Println("--------------\nProbable top bounce ")
+	}
+	if framesToX > (float64(width) / 2) {
+		//go to center
+		deltaY = float64(width / 2)
+	} else {
+		// Move the paddle so it adjusts for the ball
+		if deltaY > 5 {
+			if p.GetPosition().GetY() <= height-20 || p.GetPosition().GetY() <= 10 {
+				p.Position.SetY(p.Position.GetY() + p.MovementRate)
+
+			}
+		}
+		if deltaY < 5 {
+			if p.GetPosition().GetY() >= height-20 || p.GetPosition().GetY() >= 10 {
+				p.Position.SetY(p.Position.GetY() - p.MovementRate)
+
+			}
+		}
+
 	}
 
-	//slight anti lock fix
-	if deltaX < 3 && deltaY < 3 {
-		p.Position.SetY(p.Position.GetY() - p.MovementRate*3)
-	}
 }

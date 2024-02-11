@@ -47,7 +47,7 @@ func (b *Ball) GetYValue() int {
 }
 
 func (b *Ball) PaddleBounce(uprate int, playerone bool) {
-	b.ReverseVector()
+	b.SetVector(b.GetVector().ReverseX(), b.GetVector().GetY())
 	if playerone {
 		if b.GetVector().GetX() > -20 {
 			b.SetVector(b.GetVector().GetX()-1, uprate)
@@ -59,21 +59,21 @@ func (b *Ball) PaddleBounce(uprate int, playerone bool) {
 	}
 }
 func (b *Ball) XBounce(height int) {
-	if b.Position.GetY() <= 0 || b.Position.GetY() >= height {
+	if b.GetPosition().GetY() <= 0 || b.GetPosition().GetY() >= height {
 		b.SetVector(b.GetVector().GetX(), b.GetVector().ReverseY())
 	}
 
 }
 func (b *Ball) RandomizeVector() {
 	rand.Seed(time.Now().UnixNano())
-	r1 := rand.Intn(5 - -5) + -5
-	r2 := rand.Intn(5 - -5) + -5
+	r1 := rand.Intn(10 - -10) + -10
+	r2 := rand.Intn(10 - -19) + -10
 	if r1 == 0 {
-		r1 = 1
+		r1 = 5
 	}
 
 	if r2 == 0 {
-		r2 = 1
+		r2 = 5
 	}
 	b.SetVector(r1, r2)
 

@@ -186,17 +186,17 @@ func (g *Game) Update() error {
 			deltaxP2 := float64(ball.GetXValue() - p2.GetPosition().GetX())
 			deltayP2 := float64(ball.GetYValue() - p2.GetPosition().GetY())
 
-			if math.Abs(deltaxP1) <= 5 && math.Abs(deltayP1) <= 30 {
+			if math.Abs(deltaxP1) <= 5 && math.Abs(deltayP1) <= 40 {
 				ball.PaddleBounce(p1.UpRate, true)
 			}
 
-			if math.Abs(deltaxP2) <= 5 && math.Abs(deltayP2) <= 30 {
+			if math.Abs(deltaxP2) <= 5 && math.Abs(deltayP2) <= 40 {
 				ball.PaddleBounce(p2.UpRate, false)
 			}
 
 			ball.Update()
 			ball.XBounce(screenHeight)
-			p2.AutoMove(ball)
+			p2.AutoMove(ball, screenHeight, screenWidth)
 			if ball.Position.GetX() <= 0 {
 				p2.Score++
 				if p2.Score >= 7 {
@@ -273,10 +273,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "Press space to play again"))
 			text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, white)
 			if p1.Score >= 7 {
-				text.Draw(screen, "You won!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
+				text.Draw(screen, "You Lost!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
 				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
 			} else if p2.Score >= 7 {
-				text.Draw(screen, "You lost!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
+				text.Draw(screen, "You Won!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
 				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
 			} else {
 				width = fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "How did we get here ?? "))
