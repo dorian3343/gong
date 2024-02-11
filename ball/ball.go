@@ -58,7 +58,12 @@ func (b *Ball) PaddleBounce(uprate int, playerone bool) {
 		}
 	}
 }
+func (b *Ball) XBounce(height int) {
+	if b.Position.GetY() <= 0 || b.Position.GetY() >= height {
+		b.SetVector(b.GetVector().GetX(), b.GetVector().ReverseY())
+	}
 
+}
 func (b *Ball) RandomizeVector() {
 	rand.Seed(time.Now().UnixNano())
 	r1 := rand.Intn(5 - -5) + -5
