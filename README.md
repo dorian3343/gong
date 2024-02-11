@@ -1,4 +1,4 @@
-![image](https://github.com/dorian3343/gong/assets/129544899/1a1903ee-36fa-4f30-988a-0f1e802beca9)# Gong
+# Gong
 It's pong, but written in golang!
 
 ## How to play?
