@@ -10,11 +10,12 @@ type Player struct {
 	MovementRate    int
 	UpdatedThisTick bool
 	NoUpdateCount   int
+	Score           int
 }
 
 func Init(x, y, rate int) Player {
 	return Player{
-		Coordinates.NewCoordinates(x, y), 0, rate, false, 0,
+		Coordinates.NewCoordinates(x, y), 0, rate, false, 0, 0,
 	}
 }
 

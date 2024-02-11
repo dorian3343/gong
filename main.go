@@ -27,15 +27,12 @@ var (
 	p1          = Player.Init(screenWidth*0.9, 130, 5)
 	p2          = Player.Init(screenWidth*0.1, 130, 5)
 	ball        = Ball.Init(screenWidth/2, screenHeight/2)
-	scoreP1     = 0
-	scoreP2     = 0
 )
 
 type Game struct {
 	keys []ebiten.Key
 }
 
-// Go pls add Contains func :3
 func Contains(s []ebiten.Key, e ebiten.Key) bool {
 	for _, a := range s {
 		if a == e {
@@ -91,16 +88,16 @@ func (g *Game) Update() error {
 		if Contains(g.keys, ebiten.KeyS) && p2.GetPosition().GetY() != screenHeight-20 {
 			p2.PositionDown()
 		}
-		deltaX_p1 := float64(ball.GetXValue() - p1.GetPosition().GetX())
-		deltaY_p1 := float64(ball.GetYValue() - p1.GetPosition().GetY())
-		deltaX_p2 := float64(ball.GetXValue() - p2.GetPosition().GetX())
-		deltaY_p2 := float64(ball.GetYValue() - p2.GetPosition().GetY())
+		deltaxP1 := float64(ball.GetXValue() - p1.GetPosition().GetX())
+		deltayP1 := float64(ball.GetYValue() - p1.GetPosition().GetY())
+		deltaxP2 := float64(ball.GetXValue() - p2.GetPosition().GetX())
+		deltayP2 := float64(ball.GetYValue() - p2.GetPosition().GetY())
 
-		if math.Abs(deltaX_p1) <= 5 && math.Abs(deltaY_p1) <= 30 {
+		if math.Abs(deltaxP1) <= 5 && math.Abs(deltayP1) <= 30 {
 			ball.PaddleBounce(p1.UpRate, true)
 		}
 
-		if math.Abs(deltaX_p2) <= 5 && math.Abs(deltaY_p2) <= 30 {
+		if math.Abs(deltaxP2) <= 5 && math.Abs(deltayP2) <= 30 {
 			ball.PaddleBounce(p2.UpRate, false)
 		}
 
@@ -110,8 +107,8 @@ func (g *Game) Update() error {
 		}
 
 		if ball.Position.GetX() <= 0 {
-			scoreP2++
-			if scoreP2 >= 7 {
+			p2.Score++
+			if p2.Score >= 7 {
 				endgame = true
 			}
 			ball = Ball.Init(screenWidth/2, screenHeight/2)
@@ -119,8 +116,8 @@ func (g *Game) Update() error {
 		}
 
 		if ball.Position.GetX() >= screenWidth {
-			scoreP1++
-			if scoreP1 >= 7 {
+			p1.Score++
+			if p1.Score >= 7 {
 				endgame = true
 			}
 			ball = Ball.Init(screenWidth/2, screenHeight/2)
@@ -131,8 +128,8 @@ func (g *Game) Update() error {
 		if Contains(g.keys, ebiten.KeySpace) {
 			endgame = false
 			firstFrame = true
-			scoreP2 = 0
-			scoreP1 = 0
+			p2.Score = 0
+			p1.Score = 0
 		}
 
 	}
@@ -171,7 +168,7 @@ func (g *Game) DrawCircle(screen *ebiten.Image, x, y, radius int, clr color.Colo
 }
 func (g *Game) Draw(screen *ebiten.Image) {
 	white := color.RGBA{R: 255, G: 255, B: 255, A: 255}
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("Player one : %v | Player two : %v", scoreP1, scoreP2))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("Player one : %v | Player two : %v", p1.Score, p2.Score))
 	if !endgame {
 		g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, white)
 		g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), white)
@@ -180,11 +177,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	} else {
 		width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "Press space to play again"))
 		text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, white)
-		if scoreP1 >= 7 {
-			text.Draw(screen, "Player one won!!", defaultFont, (screenWidth/2)*0.9-width, (screenHeight / 2), white)
+		if p1.Score >= 7 {
+			text.Draw(screen, "Player one won!!", defaultFont, (screenWidth/2)*0.9-width, screenHeight/2, white)
 			text.Draw(screen, "Press space to play again", defaultFont, (screenWidth/2)*0.9-width, (screenHeight/2)+30, white)
-		} else if scoreP2 >= 7 {
-			text.Draw(screen, "Player two won!!", defaultFont, (screenWidth/2)*0.9-width, (screenHeight / 2), white)
+		} else if p2.Score >= 7 {
+			text.Draw(screen, "Player two won!!", defaultFont, (screenWidth/2)*0.9-width, screenHeight/2, white)
 			text.Draw(screen, "Press space to play again", defaultFont, (screenWidth/2)*0.9-width, (screenHeight/2)+30, white)
 		} else {
 			width = fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "How did we get here ?? "))
