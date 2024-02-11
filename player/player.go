@@ -31,6 +31,9 @@ func (p *Player) SetPosition(x, y int) {
 
 func (p *Player) PositionUp() {
 	p.SetPosition(p.GetPosition().GetX(), p.GetPosition().GetY()-p.MovementRate)
+	if p.UpRate < 0 {
+		p.UpRate = p.UpRate * -1
+	}
 	if p.UpRate >= 3 {
 		p.UpRate = p.UpRate + 1
 	}
@@ -39,6 +42,7 @@ func (p *Player) PositionUp() {
 
 func (p *Player) PositionDown() {
 	p.SetPosition(p.GetPosition().GetX(), p.GetPosition().GetY()+p.MovementRate)
+	p.UpRate = p.UpRate * -1
 	if p.UpRate <= 3 {
 		p.UpRate = p.UpRate - 1
 	}
