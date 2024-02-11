@@ -1,7 +1,6 @@
 package Player
 
 import (
-	"fmt"
 	"gong/Coordinates"
 	Ball "gong/ball"
 	"math"
@@ -67,7 +66,6 @@ func (p *Player) AutoMove(b Ball.Ball, height, width int) {
 	framesToX := math.Abs(deltaX / float64(b.GetVector().GetX()))
 	//This calculates the maximum height if it doesnt bounce before reaching the X axis
 	possibleApex := framesToX * float64(b.GetVector().GetY())
-	fmt.Println(deltaY)
 	if math.Abs(deltaY) > (float64(width) / 3) {
 		//go to center
 		deltaY = float64(width / 2)
