@@ -13,11 +13,12 @@ type Player struct {
 	UpdatedThisTick bool
 	NoUpdateCount   int
 	Score           int
+	Name            string
 }
 
-func Init(x, y, rate int) Player {
+func Init(x, y, rate int, name string) Player {
 	return Player{
-		Coordinates.NewCoordinates(x, y), 0, rate, false, 0, 0,
+		Coordinates.NewCoordinates(x, y), 0, rate, false, 0, 0, name,
 	}
 }
 

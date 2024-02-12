@@ -5,8 +5,19 @@ It's pong, but written in golang!
 Just unpack the repo, download golang(if you already haven't) and run the command go build gong.
 
 ## Tech Stack
-The only technologies used was Golang, and the incredible game engine for Go, Ebitengine. 
+The only technologies used was Golang, and the incredible game engine for Go, Ebitengine (and Yaml for config). 
 [Link to Ebitengine ](https://ebitengine.org/)
+
+## Configuration
+To configurate gong you can just edit the very obvious conf.yaml file.
+```
+What you can change:
+- Player Name's (excluding Ai)
+- Paddle speed
+- Font color
+```
+
+
 
 ## Screenshots
 ### Menu

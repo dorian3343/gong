@@ -10,6 +10,7 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
 	"golang.org/x/image/math/fixed"
+	"gong/Config"
 	"gong/Player"
 	"gong/ball"
 	"gong/gameState"
@@ -23,11 +24,12 @@ const (
 )
 
 var (
-	white       = color.RGBA{R: 255, G: 255, B: 255, A: 255}
+	paddleSpeed = 1
+	clr         = color.RGBA{}
 	defaultFont = basicfont.Face7x13
 	state       = GameState.Init()
-	p1          = Player.Init(screenWidth*0.9, 130, 5)
-	p2          = Player.Init(screenWidth*0.1, 130, 5)
+	p1          = Player.Player{}
+	p2          = Player.Player{}
 	ball        = Ball.Init(screenWidth/2, screenHeight/2)
 )
 
@@ -232,65 +234,80 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	switch state.CurrentGameWindow {
 	case GameState.TwoPlayerGame:
-		ebitenutil.DebugPrint(screen, fmt.Sprintf("Player one : %v | Player two : %v", p2.Score, p1.Score))
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("%v : %v | %v : %v", p1.Name, p1.Score, p2.Name, p2.Score))
 		if !state.EndGame {
-			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, white)
-			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), white)
-			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), white)
-			g.DrawLine(screen, screenWidth/2, 0, white)
+			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, clr)
+			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), clr)
+			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), clr)
+			g.DrawLine(screen, screenWidth/2, 0, clr)
 		} else {
 			width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "Press space to return"))
-			text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, white)
+			text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, clr)
 			if p1.Score >= 7 {
-				text.Draw(screen, "Player one won!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				s := fmt.Sprintf("%v won!!", p1.Name)
+				text.Draw(screen, s, defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			} else if p2.Score >= 7 {
-				text.Draw(screen, "Player two won!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				v := fmt.Sprintf("%v won!!", p2.Name)
+				text.Draw(screen, v, defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			} else {
 				width = fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "How did we get here ?? "))
-				text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			}
 		}
 	case GameState.MainMenu:
 		width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "GONG"))
 		nextWidth := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "Select a Game Mode:"))
-		text.Draw(screen, "GONG", defaultFont, (screenWidth/2)-width/2, (screenHeight)*0.1, white)
-		text.Draw(screen, "Select a Game Mode:", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.2, white)
-		text.Draw(screen, "1.Two Player", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.25, white)
-		text.Draw(screen, "2. Single Player", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.3, white)
-		text.Draw(screen, "3. Exit", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.35, white)
+		text.Draw(screen, "GONG", defaultFont, (screenWidth/2)-width/2, (screenHeight)*0.1, clr)
+		text.Draw(screen, "Select a Game Mode:", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.2, clr)
+		text.Draw(screen, "1.Two Player", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.25, clr)
+		text.Draw(screen, "2. Single Player", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.3, clr)
+		text.Draw(screen, "3. Exit", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.35, clr)
 
 	case GameState.SinglePlayerGame:
-		ebitenutil.DebugPrint(screen, fmt.Sprintf("Player one : %v | AI : %v", p2.Score, p1.Score))
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("Ai: %v | %v : %v", p2.Score, p2.Name, p1.Score))
 		if !state.EndGame {
-			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, white)
-			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), white)
-			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), white)
-			g.DrawLine(screen, screenWidth/2, 0, white)
+			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, clr)
+			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), clr)
+			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), clr)
+			g.DrawLine(screen, screenWidth/2, 0, clr)
 		} else {
 			width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "Press space to play again"))
-			text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, white)
+			text.Draw(screen, "Made by Dorian Kalaczynski", defaultFont, 0, screenHeight, clr)
 			if p1.Score >= 7 {
-				text.Draw(screen, "You Lost!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				text.Draw(screen, "You Lost!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			} else if p2.Score >= 7 {
-				text.Draw(screen, "You Won!!", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				v := fmt.Sprintf("%v won!!", p2.Name)
+				text.Draw(screen, v, defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to return", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			} else {
 				width = fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "How did we get here ?? "))
-				text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, screenHeight/2, white)
-				text.Draw(screen, "Press space to play again", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, white)
+				text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, screenHeight/2, clr)
+				text.Draw(screen, "Press space to play again", defaultFont, (screenWidth/2)-width/2, (screenHeight/2)+30, clr)
 			}
 		}
 	default:
 		width := fixed.Int26_6.Ceil(font.MeasureString(defaultFont, "How did we get here??"))
-		text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, (screenHeight / 2), white)
+		text.Draw(screen, "How did we get here??", defaultFont, (screenWidth/2)-width/2, (screenHeight / 2), clr)
 	}
 }
 
 func main() {
+	cfg, err := Config.Init()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	paddleSpeed = cfg.Game.PaddleSpeed
+	p1 = Player.Init(screenWidth*0.9, screenHeight/2, paddleSpeed, cfg.Game.PlayerOneAltName)
+	p2 = Player.Init(screenWidth*0.1, screenHeight/2, paddleSpeed, cfg.Game.PlayerTwoAltName)
+	clr = cfg.Color
+
+	//Setup Config   ^^^
+
 	ebiten.SetVsyncEnabled(true)
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Gong: Pong but Go.")
