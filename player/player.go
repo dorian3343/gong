@@ -1,8 +1,8 @@
 package Player
 
 import (
+	"gong/Ball"
 	"gong/Coordinates"
-	Ball "gong/ball"
 	"math"
 )
 
