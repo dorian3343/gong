@@ -7,43 +7,50 @@ import (
 )
 
 type Ball struct {
-	Position Coordinates.Coordinates
-	Vector   Coordinates.Coordinates
+	position Coordinates.Coordinates
+	vector   Coordinates.Coordinates
 }
 
 func Init(x, y int) Ball {
-	return Ball{Position: Coordinates.Coordinates{X: x, Y: y}, Vector: Coordinates.Coordinates{X: 0, Y: 0}}
+	return Ball{position: Coordinates.Coordinates{X: x, Y: y}, vector: Coordinates.Coordinates{X: 0, Y: 0}}
+}
+
+func (b *Ball) SetVectorX(x int) {
+	b.GetVector().SetX(x)
+}
+
+func (b *Ball) SetVectorY(y int) {
+	b.GetVector().SetY(y)
 }
 
 func (b *Ball) SetVector(x, y int) {
-	b.Vector.X = x
-	b.Vector.Y = y
+	b.SetVectorX(x)
+	b.SetVectorY(y)
 }
 
-func (b *Ball) GetVector() Coordinates.Coordinates {
-	return b.Vector
+func (b *Ball) GetVector() *Coordinates.Coordinates {
+	return &b.vector
 }
 
 func (b *Ball) ReverseVector() {
-	b.Vector.X = -b.Vector.X
-	b.Vector.Y = -b.Vector.Y
+	b.SetVector(-b.GetVector().GetX(), -b.GetVector().GetY())
 }
 
 func (b *Ball) Update() {
-	b.Position.X += b.Vector.X
-	b.Position.Y += b.Vector.Y
+	b.position.X += b.GetVector().GetX()
+	b.position.Y += b.GetVector().GetY()
 }
 
 func (b *Ball) GetPosition() Coordinates.Coordinates {
-	return b.Position
+	return b.position
 }
 
-func (b *Ball) GetXValue() int {
-	return b.Position.X
+func (b *Ball) GetPositionX() int {
+	return b.position.X
 }
 
-func (b *Ball) GetYValue() int {
-	return b.Position.Y
+func (b *Ball) GetPositionY() int {
+	return b.position.Y
 }
 
 func (b *Ball) PaddleBounce(uprate int, playerone bool) {

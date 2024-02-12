@@ -111,10 +111,10 @@ func (g *Game) Update() error {
 			if Contains(g.keys, ebiten.KeyS) && p2.GetPosition().GetY() != screenHeight-20 {
 				p2.PositionDown()
 			}
-			deltaxP1 := float64(ball.GetXValue() - p1.GetPosition().GetX())
-			deltayP1 := float64(ball.GetYValue() - p1.GetPosition().GetY())
-			deltaxP2 := float64(ball.GetXValue() - p2.GetPosition().GetX())
-			deltayP2 := float64(ball.GetYValue() - p2.GetPosition().GetY())
+			deltaxP1 := float64(ball.GetPositionX() - p1.GetPosition().GetX())
+			deltayP1 := float64(ball.GetPositionY() - p1.GetPosition().GetY())
+			deltaxP2 := float64(ball.GetPositionX() - p2.GetPosition().GetX())
+			deltayP2 := float64(ball.GetPositionY() - p2.GetPosition().GetY())
 
 			if math.Abs(deltaxP1) <= 5 && math.Abs(deltayP1) <= 30 {
 				ball.PaddleBounce(p1.UpRate, true)
@@ -126,7 +126,7 @@ func (g *Game) Update() error {
 
 			ball.Update()
 			ball.XBounce(screenHeight)
-			if ball.Position.GetX() <= 0 {
+			if ball.GetPositionX() <= 0 {
 				p2.Score++
 				if p2.Score >= 7 {
 					state.EndGame = true
@@ -135,7 +135,7 @@ func (g *Game) Update() error {
 				ball.RandomizeVector()
 			}
 
-			if ball.Position.GetX() >= screenWidth {
+			if ball.GetPositionX() >= screenWidth {
 				p1.Score++
 				if p1.Score >= 7 {
 					state.EndGame = true
@@ -183,10 +183,10 @@ func (g *Game) Update() error {
 				p1.PositionDown()
 			}
 
-			deltaxP1 := float64(ball.GetXValue() - p1.GetPosition().GetX())
-			deltayP1 := float64(ball.GetYValue() - p1.GetPosition().GetY())
-			deltaxP2 := float64(ball.GetXValue() - p2.GetPosition().GetX())
-			deltayP2 := float64(ball.GetYValue() - p2.GetPosition().GetY())
+			deltaxP1 := float64(ball.GetPositionX() - p1.GetPosition().GetX())
+			deltayP1 := float64(ball.GetPositionY() - p1.GetPosition().GetY())
+			deltaxP2 := float64(ball.GetPositionX() - p2.GetPosition().GetX())
+			deltayP2 := float64(ball.GetPositionY() - p2.GetPosition().GetY())
 
 			if math.Abs(deltaxP1) <= 5 && math.Abs(deltayP1) <= 40 {
 				ball.PaddleBounce(p1.UpRate, true)
@@ -199,7 +199,7 @@ func (g *Game) Update() error {
 			ball.Update()
 			ball.XBounce(screenHeight)
 			p2.AutoMove(ball, screenHeight, screenWidth)
-			if ball.Position.GetX() <= 0 {
+			if ball.GetPositionX() <= 0 {
 				p2.Score++
 				if p2.Score >= 7 {
 					state.EndGame = true
@@ -207,7 +207,7 @@ func (g *Game) Update() error {
 				ball = Ball.Init(screenWidth/2, screenHeight/2)
 				ball.RandomizeVector()
 			}
-			if ball.Position.GetX() >= screenWidth {
+			if ball.GetPositionX() >= screenWidth {
 				p1.Score++
 				if p1.Score >= 7 {
 					state.EndGame = true
@@ -236,7 +236,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	case GameState.TwoPlayerGame:
 		ebitenutil.DebugPrint(screen, fmt.Sprintf("%v : %v | %v : %v", p1.Name, p1.Score, p2.Name, p2.Score))
 		if !state.EndGame {
-			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, clr)
+			g.DrawCircle(screen, ball.GetPositionX(), ball.GetPositionY(), 5, clr)
 			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), clr)
 			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), clr)
 			g.DrawLine(screen, screenWidth/2, 0, clr)
@@ -267,9 +267,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		text.Draw(screen, "3. Exit", defaultFont, (screenWidth/2)-nextWidth/2, (screenHeight)*0.35, clr)
 
 	case GameState.SinglePlayerGame:
-		ebitenutil.DebugPrint(screen, fmt.Sprintf("Ai: %v | %v : %v", p2.Score, p2.Name, p1.Score))
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("%v: %v | Ai : %v", p2.Name, p2.Score, p1.Score))
 		if !state.EndGame {
-			g.DrawCircle(screen, ball.GetXValue(), ball.GetYValue(), 5, clr)
+			g.DrawCircle(screen, ball.GetPositionX(), ball.GetPositionY(), 5, clr)
 			g.DrawPaddle(screen, p1.GetPosition().GetX(), p1.GetPosition().GetY(), clr)
 			g.DrawPaddle(screen, p2.GetPosition().GetX(), p2.GetPosition().GetY(), clr)
 			g.DrawLine(screen, screenWidth/2, 0, clr)

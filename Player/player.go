@@ -62,10 +62,10 @@ func (p *Player) UprateUpdate() {
 
 func (p *Player) AutoMove(b Ball.Ball, height, width int) {
 	// the distance between the ball and paddle
-	deltaX := float64(b.GetXValue() - p.GetPosition().GetX())
+	deltaX := float64(b.GetPositionX() - p.GetPosition().GetX())
 	// the height between the ball and paddle
 
-	deltaY := float64(b.GetYValue() - p.GetPosition().GetY())
+	deltaY := float64(b.GetPositionY() - p.GetPosition().GetY())
 
 	//This calculates in how many frames will the ball reach the paddles x axis
 	framesToX := math.Abs(deltaX / float64(b.GetVector().GetX()))
