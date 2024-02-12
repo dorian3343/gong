@@ -21,7 +21,8 @@ What you can change:
 
 ## Screenshots
 ### Menu
-![Uploading image.png…]()
+![image](https://github.com/dorian3343/gong/assets/129544899/9cd49061-5235-4895-b4ef-d3571f52fa5c)
+
 
 
 ### Gameplay 1
