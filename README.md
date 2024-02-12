@@ -21,7 +21,9 @@ What you can change:
 
 ## Screenshots
 ### Menu
-![image](https://github.com/dorian3343/gong/assets/129544899/cd89e61b-28d2-4a90-af1a-a8ccb7153622)
+![image](https://github.com/dorian3343/gong/assets/129544899/9cd49061-5235-4895-b4ef-d3571f52fa5c)
+
+
 
 ### Gameplay 1
 ![image](https://github.com/dorian3343/gong/assets/129544899/da3a4a82-1a0a-4962-8e5f-1957dd9de734)
