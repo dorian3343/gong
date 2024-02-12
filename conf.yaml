@@ -1,0 +1,5 @@
+game:
+  paddle_speed:     5
+  player1_alt_name: Caroline
+  player2_alt_name: Dorian
+  color:            [255, 0, 128]
